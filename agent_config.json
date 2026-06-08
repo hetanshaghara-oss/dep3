@@ -1,0 +1,106 @@
+{
+  "name": "WorldCup 2026 ELO Analyst",
+  "description": "AI Agent for analyzing FIFA World Cup 2026 teams using ELO ratings",
+  "version": "1.0.0",
+  "type": "data_analyst",
+  "model": {
+    "name": "gemini-2.0-flash",
+    "temperature": 0.3,
+    "max_tokens": 1000
+  },
+  "capabilities": {
+    "team_analysis": {
+      "description": "Analyze individual team statistics and ELO ratings",
+      "enabled": true
+    },
+    "team_comparison": {
+      "description": "Compare two or more teams",
+      "enabled": true
+    },
+    "match_prediction": {
+      "description": "Predict match outcomes using ELO formula",
+      "enabled": true,
+      "formula": "P = 1 / (1 + 10^((OpponentRating - TeamRating)/400))"
+    },
+    "historical_analysis": {
+      "description": "Analyze team performance over time",
+      "enabled": true,
+      "data_range": "1901-2026"
+    },
+    "confederation_rankings": {
+      "description": "Analyze confederation-level statistics",
+      "enabled": true,
+      "confederations": ["UEFA", "CONMEBOL", "AFC", "CAF", "CONCACAF", "OFC"]
+    },
+    "statistical_analysis": {
+      "description": "Analyze wins, losses, draws, goals, etc.",
+      "enabled": true
+    }
+  },
+  "data_sources": {
+    "primary": "elo_ratings_wc2026.json",
+    "collections": {
+      "all_records": "elo_ratings (117,000 records)",
+      "current_teams": "wc2026_teams (32 teams)",
+      "query_log": "user_queries (logging)"
+    }
+  },
+  "constraints": {
+    "use_only_provided_data": true,
+    "no_hallucination_allowed": true,
+    "require_numerical_evidence": true,
+    "explain_reasoning": true
+  },
+  "example_queries": [
+    "Who are the top 10 favorites?",
+    "What's the win probability for France vs Argentina?",
+    "Compare Brazil and Germany",
+    "Show me historical ELO trend for Italy",
+    "Which confederation has the strongest teams?",
+    "What's the average ELO rating for CONMEBOL teams?",
+    "Rank all teams by confederation"
+  ],
+  "outputs": {
+    "team_card": {
+      "fields": [
+        "country",
+        "rank",
+        "rating",
+        "confederation",
+        "wins",
+        "losses",
+        "goals_for",
+        "goals_against"
+      ]
+    },
+    "comparison": {
+      "fields": [
+        "team1",
+        "team2",
+        "rating_difference",
+        "win_probability_t1",
+        "win_probability_t2"
+      ]
+    },
+    "prediction": {
+      "fields": [
+        "team1",
+        "team2",
+        "win_probability",
+        "draw_probability",
+        "formula_used"
+      ]
+    }
+  },
+  "api_endpoints": {
+    "chat": "POST /api/chat",
+    "rankings": "GET /api/rankings",
+    "team_details": "GET /api/team/:name",
+    "head_to_head": "GET /api/h2h?team1=X&team2=Y"
+  },
+  "deployment": {
+    "platform": "Vercel",
+    "runtime": "Node.js",
+    "environment": "production"
+  }
+}
